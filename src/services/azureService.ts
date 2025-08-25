@@ -39,13 +39,17 @@ export interface AnalysisResult {
 }
 
 export class AzureService {
-  private static readonly AZURE_OPENAI_ENDPOINT = "https://peela-mekz7k6n-eastus2.cognitiveservices.azure.com/openai/responses?api-version=2025-04-01-preview";
+  private static readonly AZURE_OPENAI_BASE = "https://peela-mekz7k6n-eastus2.cognitiveservices.azure.com";
   private static readonly AZURE_KEY = "CTAJJleij1q57OVWtjwuFNpND0wQdL7pif1b2LFYl6YZNkvxBiG8JQQJ99BHACHYHv6XJ3w3AAAAACOGpilp";
   private static readonly DEPLOYMENT_NAME = "abb-azureai-gpt-5-mini";
+  private static readonly API_VERSION = "2024-02-15-preview";
   private static readonly SAS_ENDPOINT = "https://abbllmpoc-dj0722hax-sa-technologies.vercel.app/api/getAzureSAS";
   private static readonly EXTRACT_ENDPOINT = "https://abbllmpoc-e0luaft4x-sa-technologies.vercel.app/api/extractDocument";
 
   static async getSASUrl(fileName: string): Promise<{ uploadUrl: string; readUrl: string }> {
+    console.log("Requesting SAS URL for file:", fileName);
+    console.log("SAS Endpoint:", this.SAS_ENDPOINT);
+    
     try {
       const response = await fetch(this.SAS_ENDPOINT, {
         method: "POST",
@@ -56,15 +60,19 @@ export class AzureService {
       });
 
       if (!response.ok) {
-        throw new Error(`SAS URL generation failed: ${response.statusText}`);
+        const errorText = await response.text();
+        console.error("SAS URL Error:", response.status, response.statusText, errorText);
+        throw new Error(`SAS URL generation failed: ${response.status} ${response.statusText} - ${errorText}`);
       }
 
       const data = await response.json();
+      console.log("SAS URL response:", data);
       return {
         uploadUrl: data.uploadUrl,
         readUrl: data.readUrl,
       };
     } catch (error) {
+      console.error("SAS URL fetch error:", error);
       throw new Error(`Failed to get SAS URL: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
@@ -154,8 +162,13 @@ export class AzureService {
 Text to analyze:
 ${text}`;
 
+    const endpoint = `${this.AZURE_OPENAI_BASE}/openai/deployments/${this.DEPLOYMENT_NAME}/chat/completions?api-version=${this.API_VERSION}`;
+    
+    console.log("Making request to Azure OpenAI:", endpoint);
+    console.log("Using deployment:", this.DEPLOYMENT_NAME);
+
     try {
-      const response = await fetch(this.AZURE_OPENAI_ENDPOINT, {
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -168,7 +181,6 @@ ${text}`;
               content: prompt,
             },
           ],
-          model: this.DEPLOYMENT_NAME,
           max_tokens: 2000,
           temperature: 0.3,
         }),
@@ -176,6 +188,7 @@ ${text}`;
 
       if (!response.ok) {
         const errorText = await response.text();
+        console.error("Azure OpenAI Error:", response.status, response.statusText, errorText);
         throw new Error(`Azure OpenAI API failed: ${response.status} ${response.statusText} - ${errorText}`);
       }
 
