@@ -1,3 +1,9 @@
+
+type GetSASInput = {
+  originalName: string;
+  contentType?: string;
+  prefix?: string; 
+}
 // Azure AI Communication Analyzer Service
 export interface AnalysisResult {
   overall_score: number;
@@ -43,11 +49,11 @@ export class AzureService {
   private static readonly AZURE_KEY = "CTAJJleij1q57OVWtjwuFNpND0wQdL7pif1b2LFYl6YZNkvxBiG8JQQJ99BHACHYHv6XJ3w3AAAAACOGpilp";
   private static readonly DEPLOYMENT_NAME = "abb-azureai-gpt-5-mini";
   private static readonly API_VERSION = "2024-02-15-preview";
-  private static readonly SAS_ENDPOINT = "https://abbllmpoc-dj0722hax-sa-technologies.vercel.app/api/getAzureSAS";
-  private static readonly EXTRACT_ENDPOINT = "https://abbllmpoc-e0luaft4x-sa-technologies.vercel.app/api/extractDocument";
+  private static readonly SAS_ENDPOINT = "https://abbllmpoc-git-main-sa-technologies.vercel.app/api/getAzureSAS";
+  private static readonly EXTRACT_ENDPOINT = "https://abbllmpoc-git-main-sa-technologies.vercel.app/api/extractDocument";
 
-  static async getSASUrl(fileName: string): Promise<{ uploadUrl: string; readUrl: string }> {
-    console.log("Requesting SAS URL for file:", fileName);
+  static async getSASUrl(input: GetSASInput): Promise<{ uploadUrl: string; readUrl: string }> {
+    console.log("Requesting SAS URL for file:", input);
     console.log("SAS Endpoint:", this.SAS_ENDPOINT);
     
     try {
@@ -56,7 +62,7 @@ export class AzureService {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ fileName }),
+        body: JSON.stringify(input),
       });
 
       if (!response.ok) {
@@ -103,7 +109,7 @@ export class AzureService {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ readUrl }),
+        body: JSON.stringify({ fileUrl: readUrl }),
       });
 
       if (!response.ok) {
@@ -182,7 +188,7 @@ ${text}`;
             },
           ],
           max_completion_tokens: 2000,
-          temperature: 0.3,
+          temperature: 1,
         }),
       });
 

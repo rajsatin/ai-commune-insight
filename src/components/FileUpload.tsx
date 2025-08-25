@@ -35,7 +35,11 @@ export const FileUpload = ({ onAnalyze, onClear, isAnalyzing = false, disabled =
         description: "Generating secure upload URL"
       });
       
-      const { uploadUrl, readUrl } = await AzureService.getSASUrl(file.name);
+      const { uploadUrl, readUrl } = await AzureService.getSASUrl({
+        originalName: file.name,
+        contentType: file.type,         // e.g. "application/pdf"
+        prefix: "uploads"
+      });
       
       // Step 2: Upload file to Azure Blob
       toast({
