@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* AI Communication Analyzer Design System - Light green primary with blue accents */
 
 @layer base {
   :root {
@@ -71,6 +70,9 @@
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+     /* Text ABB  */
+    --abb-red: 0 100% 50%;
   }
 
   .dark {
@@ -138,6 +140,8 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+     --abb-red: 0 100% 50%;
   }
 }
 
@@ -175,5 +179,14 @@
   
   .transition-bounce {
     transition: var(--transition-bounce);
+  }
+}
+
+@layer utilities {
+  .text-abb-red {
+    color: hsl(var(--abb-red));
+  }
+  .bg-abb-red {
+    background-color: hsl(var(--abb-red));
   }
 }

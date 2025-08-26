@@ -17,8 +17,8 @@ export const Header = () => {
               <Brain className="w-6 h-6 text-brand-foreground" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-foreground">AI Communication Analyzer</h1>
-              <p className="text-sm text-text-muted">Advanced text analysis powered by Azure AI</p>
+              <h1 className="text-xl font-bold text-abb-red">ABB CommAnalyzer</h1>
+              <p className="text-sm text-text-muted ">AI-Powered Communication Insights</p>
             </div>
           </div>
           

@@ -125,7 +125,7 @@ const Index = () => {
         <div className="container mx-auto px-6 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-text-muted">
             <div>
-              <p>&copy; 2024 AI Communication Analyzer. Powered by Azure AI.</p>
+              <p>&copy; 2024 ABB CommAnalyzer. Powered by AI.</p>
             </div>
             <div className="flex items-center gap-6">
               <span>Keyboard shortcuts: Ctrl+Enter to analyze • Ctrl+K to clear</span>
