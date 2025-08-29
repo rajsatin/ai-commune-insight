@@ -45,16 +45,15 @@ export interface AnalysisResult {
 }
 
 export class AzureService {
-  private static readonly AZURE_OPENAI_BASE = "https://peela-mekz7k6n-eastus2.cognitiveservices.azure.com";
-  private static readonly AZURE_KEY = "CTAJJleij1q57OVWtjwuFNpND0wQdL7pif1b2LFYl6YZNkvxBiG8JQQJ99BHACHYHv6XJ3w3AAAAACOGpilp";
-  private static readonly DEPLOYMENT_NAME = "abb-azureai-gpt-5-mini";
-  private static readonly API_VERSION = "2024-02-15-preview";
-  private static readonly SAS_ENDPOINT = "https://abbllmpoc-git-main-sa-technologies.vercel.app/api/getAzureSAS";
-  private static readonly EXTRACT_ENDPOINT = "https://abbllmpoc-git-main-sa-technologies.vercel.app/api/extractDocument";
+  private static readonly AZURE_OPENAI_BASE = import.meta.env.VITE_AZURE_OPENAI_BASE;
+  private static readonly AZURE_KEY = import.meta.env.VITE_AZURE_KEY;
+  private static readonly DEPLOYMENT_NAME = import.meta.env.VITE_DEPLOYMENT_NAME;
+  private static readonly API_VERSION = import.meta.env.VITE_API_VERSION;
+  private static readonly SAS_ENDPOINT = import.meta.env.VITE_SAS_ENDPOINT;
+  private static readonly EXTRACT_ENDPOINT = import.meta.env.VITE_EXTRACT_ENDPOINT;
 
   static async getSASUrl(input: GetSASInput): Promise<{ uploadUrl: string; readUrl: string }> {
     console.log("Requesting SAS URL for file:", input);
-    console.log("SAS Endpoint:", this.SAS_ENDPOINT);
     
     try {
       const response = await fetch(this.SAS_ENDPOINT, {
@@ -171,7 +170,6 @@ ${text}`;
     const endpoint = `${this.AZURE_OPENAI_BASE}/openai/deployments/${this.DEPLOYMENT_NAME}/chat/completions?api-version=${this.API_VERSION}`;
     
     console.log("Making request to Azure OpenAI:", endpoint);
-    console.log("Using deployment:", this.DEPLOYMENT_NAME);
 
     try {
       const response = await fetch(endpoint, {
